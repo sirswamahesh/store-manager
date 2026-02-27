@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from "joi";
-import { ApiResponse } from "../core/ApiResponse";
+import path from "path";
+import { deleteFile } from "../utils/file";
 
 export const validate =
   (schema: ObjectSchema) =>
@@ -11,12 +12,20 @@ export const validate =
     });
 
     if (error) {
-      return res.status(400).json(
-        ApiResponse.error(
-          "Validation Failed",
-          error.details.map((err) => err.message),
-        ),
-      );
+      if (req.file) {
+        const filePath = path.join(
+          process.cwd(),
+          "uploads/products",
+          req.file.filename,
+        );
+        deleteFile(filePath);
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: "Validation Failed",
+        data: error.details.map((err) => err.message),
+      });
     }
 
     req.body = value;

@@ -25,3 +25,10 @@ export const createTenantSchema = Joi.object({
     "any.required": "Admin email is required",
   }),
 });
+
+export const tenantIdSchema = Joi.object({
+  id: Joi.string().required().messages({
+    "string.empty": "Tenant ID is required",
+    "any.required": "Tenant ID is required",
+  }),
+});

@@ -1,17 +1,18 @@
-import { db } from "../../config/firebase";
+import { BaseRepository } from "../../core/BaseRepository";
+import { IUser } from "../user/user.interface";
 
-export class AuthRepository {
-  private collection = db.collection("users");
+export class AuthRepository extends BaseRepository<IUser> {
+  constructor() {
+    super("users");
+  }
 
-  async findByEmail(email: string) {
-    const snapshot = await this.collection
-      .where("email", "==", email)
-      .limit(1)
-      .get();
+  async findByEmail(email: string): Promise<IUser | null> {
+    return this.findOne("email", email);
+  }
 
-    if (snapshot.empty) return null;
-
-    const doc = snapshot.docs[0];
-    return { id: doc.id, ...doc.data() };
+  async updateLastLogin(userId: string): Promise<void> {
+    await this.update(userId, {
+      lastLogin: new Date().toISOString(),
+    } as Partial<IUser>);
   }
 }

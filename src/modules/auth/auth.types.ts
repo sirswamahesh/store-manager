@@ -3,8 +3,9 @@ export interface LoginDTO {
   pin: string;
 }
 
-export interface JwtPayload {
+export interface TokenPayload {
   id: string;
   role: string;
-  tenantId?: string;
+  tenantId?: string | null;
+  shopId?: string | null;
 }

@@ -7,7 +7,7 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
     if (!req.user) {
       return res.status(401).json(ApiResponse.error("Unauthorized"));
     }
-
+    console.log(...allowedRoles, req.user.role);
     if (!allowedRoles.includes(req.user.role)) {
       return res
         .status(403)
